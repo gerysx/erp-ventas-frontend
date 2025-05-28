@@ -7,6 +7,6 @@ export class EmpleadoService {
   constructor(private http: HttpClient) {}
 
   listar() {
-    return this.http.get<any[]>(`${environment.apiUrl}/empleados`);
+    return this.http.get<any[]>(`${environment.apiUrl}/api/empleados`);
   }
 }

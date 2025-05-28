@@ -12,7 +12,7 @@ export interface Cliente {
 
 @Injectable({ providedIn: 'root' })
 export class ClienteService {
-  private apiUrl = `${environment.apiUrl}/clientes`;
+  private apiUrl = `${environment.apiUrl}/api/clientes`;
 
 
   constructor(private http: HttpClient) {}
