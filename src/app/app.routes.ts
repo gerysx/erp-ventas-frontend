@@ -1,12 +1,23 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './auth/auth.guard';
-import { LoginComponent } from './auth/login/login.component';
 import { roleGuard } from './auth/role.guards';
+import { LoginComponent } from './auth/login/login.component';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
 import { HomeComponent } from './pages/home/home.component';
+import { noAuthGuard } from './auth/no-auth.guard'; // ✅ IMPORTAMOS el guard nuevo
 
 export const appRoutes: Routes = [
-  { path: 'login', component: LoginComponent },
+  {
+    path: 'login',
+    component: LoginComponent,
+    canActivate: [noAuthGuard], // ✅ Solo si NO estás autenticado
+  },
+  {
+    path: 'sign-up',
+    loadComponent: () =>
+      import('./auth/sign-up/sign-up.component').then((m) => m.SignUpComponent),
+    canActivate: [noAuthGuard], // ✅ Solo si NO estás autenticado
+  },
   {
     path: '',
     component: MainLayoutComponent,
@@ -27,7 +38,6 @@ export const appRoutes: Routes = [
         loadChildren: () =>
           import('./facturas/factura.routes').then((m) => m.FACTURA_ROUTES),
       },
-
       {
         path: 'clientes',
         loadComponent: () =>
