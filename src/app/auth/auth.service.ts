@@ -17,12 +17,17 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  login(datos: { correo: string; password: string }): Observable<{ token: string }> {
-  return this.http.post<{ token: string }>(
-    `${environment.apiUrl}/auth/login`,
-    datos
-  );
-}
+  login(datos: {
+    correo: string;
+    password: string;
+  }): Observable<{ token: string }> {
+    console.log('URL usada para login:', environment.apiUrl + '/api/auth/login');
+
+    return this.http.post<{ token: string }>(
+  `${environment.apiUrl}/api/auth/login`,
+  datos
+);
+  }
 
   guardarToken(token: string) {
     localStorage.setItem('token', token);
@@ -73,8 +78,8 @@ export class AuthService {
   }
 
   esAdmin(): boolean {
-  return this.obtenerRol()?.toUpperCase() === 'ADMIN';
-}
+    return this.obtenerRol()?.toUpperCase() === 'ADMIN';
+  }
 
   logout() {
     localStorage.removeItem('token');
