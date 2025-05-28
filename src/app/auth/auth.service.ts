@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
+import { environment } from '../../environments/environment';
 
 interface JwtPayload {
   id: number;
@@ -17,8 +18,11 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   login(datos: { correo: string; password: string }): Observable<{ token: string }> {
-    return this.http.post<{ token: string }>('http://localhost:3000/api/auth/login', datos);
-  }
+  return this.http.post<{ token: string }>(
+    `${environment.apiUrl}/auth/login`,
+    datos
+  );
+}
 
   guardarToken(token: string) {
     localStorage.setItem('token', token);
