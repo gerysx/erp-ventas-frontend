@@ -10,7 +10,14 @@ import { MatCardModule } from '@angular/material/card';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatInputModule, MatButtonModule, MatCardModule, RouterModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatButtonModule,
+    MatCardModule,
+    RouterModule
+  ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
@@ -31,22 +38,22 @@ export class LoginComponent implements OnInit {
   }
 
   enviar(): void {
-  if (this.form.invalid) return;
+    if (this.form.invalid) return;
 
-  this.auth.login(this.form.value).subscribe({
-    next: (res: { token: string }) => {
-      this.auth.guardarToken(res.token);
+    this.auth.login(this.form.value).subscribe({
+      next: (res: { token: string }) => {
+        this.auth.guardarToken(res.token);
 
-      const rol = this.auth.obtenerRol();
-      if (rol === 'ADMIN') {
-        this.router.navigate(['/proveedores']); // o a dashboard admin
-      } else {
-        this.router.navigate(['/productos']); // o home general
+        const rol = this.auth.obtenerRol()?.toUpperCase(); // aseguramos mayúsculas
+        if (rol === 'ADMIN') {
+          this.router.navigate(['/proveedores']);
+        } else {
+          this.router.navigate(['/productos']);
+        }
+      },
+      error: () => {
+        alert('Credenciales inválidas');
       }
-    },
-    error: () => {
-      alert('Credenciales inválidas');
-    }
-  });
-}
+    });
+  }
 }
