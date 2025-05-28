@@ -1,0 +1,59 @@
+<mat-card>
+  <h2>{{ modoEdicion ? 'Editar Proveedor' : 'Nuevo Proveedor' }}</h2>
+
+  <form [formGroup]="form" (ngSubmit)="guardarProveedor()">
+    <mat-form-field appearance="fill" class="w-100">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="nombre" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-100">
+      <mat-label>Contacto (opcional)</mat-label>
+      <input matInput formControlName="contacto" />
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit">
+      {{ modoEdicion ? 'Actualizar' : 'Guardar' }}
+    </button>
+    <button *ngIf="modoEdicion" mat-button type="button" (click)="resetFormulario()">Cancelar</button>
+  </form>
+</mat-card>
+
+<mat-card class="mt-4">
+  <h2>Proveedores</h2>
+  <table mat-table [dataSource]="proveedores" class="mat-elevation-z8 w-100">
+
+    <!-- Nombre -->
+    <ng-container matColumnDef="nombre">
+      <th mat-header-cell *matHeaderCellDef>Nombre</th>
+      <td mat-cell *matCellDef="let p">{{ p.nombre }}</td>
+    </ng-container>
+
+    <!-- Contacto -->
+    <ng-container matColumnDef="contacto">
+      <th mat-header-cell *matHeaderCellDef>Contacto</th>
+      <td mat-cell *matCellDef="let p">
+        <span *ngIf="p.contacto; else sinContacto">{{ p.contacto }}</span>
+        <ng-template #sinContacto><em class="text-muted">Sin contacto</em></ng-template>
+      </td>
+    </ng-container>
+
+    <!-- Acciones -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef>Acciones</th>
+      <td mat-cell *matCellDef="let p">
+        <div *ngIf="esAdmin">
+          <button class="btn btn-sm btn-outline-primary me-2" (click)="editar(p)" title="Editar">
+            <i class="bi bi-pen"></i>
+          </button>
+          <button class="btn btn-sm btn-outline-danger" (click)="eliminar(p.id)" title="Eliminar">
+            <i class="bi bi-x-circle"></i>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['nombre', 'contacto', 'acciones']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['nombre', 'contacto', 'acciones']"></tr>
+  </table>
+</mat-card>

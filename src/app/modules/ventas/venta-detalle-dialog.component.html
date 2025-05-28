@@ -1,0 +1,32 @@
+<h2 mat-dialog-title>Factura Nº {{ data.factura.id }}</h2>
+<mat-dialog-content>
+  <p><strong>Fecha:</strong> {{ data.factura.fecha | date }}</p>
+<p><strong>Cliente:</strong> {{ data.factura.cliente?.nombre || 'No disponible' }}</p>
+<p><strong>Empleado:</strong> {{ data.factura.empleado?.nombre || 'No disponible' }}</p>
+
+  <table class="table table-bordered mt-3">
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Precio Unitario</th>
+        <th>Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let d of data.factura.detalles">
+        <td>{{ d.producto.nombre }}</td>
+        <td>{{ d.cantidad }}</td>
+        <td>{{ d.precioUnitario | currency }}</td>
+        <td>{{ d.cantidad * d.precioUnitario | currency }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 class="mt-3 text-end">Total: {{ getTotal(data.factura.detalles) | currency }}</h4>
+</mat-dialog-content>
+
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cerrar</button>
+</mat-dialog-actions>

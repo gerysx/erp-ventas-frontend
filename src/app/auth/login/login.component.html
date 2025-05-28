@@ -1,0 +1,19 @@
+<div class="login-container">
+  <form [formGroup]="form" (ngSubmit)="enviar()">
+    <h2>Iniciar sesión</h2>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Correo</mat-label>
+      <input matInput formControlName="correo" type="email" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Contraseña</mat-label>
+      <input matInput formControlName="password" type="password" />
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+      Entrar
+    </button>
+  </form>
+</div>

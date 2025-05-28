@@ -1,0 +1,67 @@
+<mat-card>
+  <h2>{{ modoEdicion ? 'Editar Empleado' : 'Nuevo Empleado' }}</h2>
+
+  <form [formGroup]="form" (ngSubmit)="guardarEmpleado()">
+    <mat-form-field appearance="fill" class="w-100">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="nombre" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-100">
+      <mat-label>Correo</mat-label>
+      <input matInput formControlName="correo" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-100">
+      <mat-label>Teléfono</mat-label>
+      <input matInput formControlName="telefono" />
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit">
+      {{ modoEdicion ? 'Actualizar' : 'Guardar' }}
+    </button>
+    <button *ngIf="modoEdicion" mat-button type="button" (click)="resetFormulario()">Cancelar</button>
+  </form>
+</mat-card>
+
+<mat-card class="mt-4">
+  <h2>Empleados</h2>
+  <table mat-table [dataSource]="empleados" class="mat-elevation-z8 w-100">
+
+    <!-- Nombre -->
+    <ng-container matColumnDef="nombre">
+      <th mat-header-cell *matHeaderCellDef>Nombre</th>
+      <td mat-cell *matCellDef="let e">{{ e.nombre }}</td>
+    </ng-container>
+
+    <!-- Correo -->
+    <ng-container matColumnDef="correo">
+      <th mat-header-cell *matHeaderCellDef>Correo</th>
+      <td mat-cell *matCellDef="let e">{{ e.correo }}</td>
+    </ng-container>
+
+    <!-- Teléfono -->
+    <ng-container matColumnDef="telefono">
+      <th mat-header-cell *matHeaderCellDef>Teléfono</th>
+      <td mat-cell *matCellDef="let e">{{ e.telefono }}</td>
+    </ng-container>
+
+    <!-- Acciones -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef>Acciones</th>
+      <td mat-cell *matCellDef="let e">
+        <div *ngIf="esAdmin">
+          <button class="btn btn-sm btn-outline-primary me-2" (click)="editar(e)" title="Editar">
+            <i class="bi bi-pen"></i>
+          </button>
+          <button class="btn btn-sm btn-outline-danger" (click)="eliminar(e.id)" title="Eliminar">
+            <i class="bi bi-x-circle"></i>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['nombre', 'correo', 'telefono', 'acciones']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['nombre', 'correo', 'telefono', 'acciones']"></tr>
+  </table>
+</mat-card>

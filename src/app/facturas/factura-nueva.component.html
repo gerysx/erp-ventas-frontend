@@ -1,0 +1,109 @@
+<div class="container factura-container mt-4">
+  <h1 class="mb-4">Nueva Factura</h1>
+
+  <form [formGroup]="form" (ngSubmit)="guardar()">
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Empleado</mat-label>
+          <mat-select formControlName="empleadoId">
+            <mat-option *ngFor="let emp of empleados" [value]="emp.id">{{ emp.nombre }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Cliente</mat-label>
+          <mat-select formControlName="clienteId">
+            <mat-option *ngFor="let cliente of clientes" [value]="cliente.id">{{ cliente.nombre }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-6">
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Fecha</mat-label>
+          <input matInput type="date" formControlName="fecha">
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div *ngFor="let d of detalles; let i = index" class="row align-items-end mb-2">
+      <div class="col-md-3">
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Producto</mat-label>
+          <mat-select [(ngModel)]="d.productoId" name="producto{{i}}" [ngModelOptions]="{standalone: true}" (selectionChange)="actualizarPrecio(i)">
+            <mat-option *ngFor="let p of productos" [value]="p.id">{{ p.nombre }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-2">
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Cantidad</mat-label>
+          <input matInput type="number" [(ngModel)]="d.cantidad" name="cantidad{{i}}" [ngModelOptions]="{standalone: true}">
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-2">
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Precio</mat-label>
+          <input matInput type="number" [(ngModel)]="d.precioUnitario" name="precio{{i}}€" [ngModelOptions]="{standalone: true}" readonly>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-3">
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Total</mat-label>
+          <input matInput type="number" [value]="calcularTotalProducto(d)" readonly>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-2 text-end">
+        <button mat-icon-button color="warn" type="button" (click)="eliminarDetalle(i)" aria-label="Eliminar producto">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="text-start mb-4">
+      <button mat-raised-button color="accent" type="button" (click)="agregarDetalle()">
+        + Agregar Producto
+      </button>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Descuento (%)</mat-label>
+          <input
+            matInput
+            type="number"
+            [(ngModel)]="descuento"
+            name="descuento"
+            [ngModelOptions]="{standalone: true}"
+            min="0"
+            max="100"
+            (input)="validarDescuento()"
+          >
+          <mat-error *ngIf="descuentoInvalido">Debe ser un valor entre 0 y 100</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="text-end mb-2">
+      <h5>Total Bruto: {{ calcularTotalGeneral() | number:'1.2-2' }} €</h5>
+      <h5>Descuento: {{ descuento }}%</h5>
+      <h4>Total Final: {{ calcularTotalConDescuento() | currency }}</h4>
+    </div>
+
+    <div class="text-end">
+      <button mat-raised-button color="primary" type="submit" [disabled]="detalles.length === 0 || descuentoInvalido">
+        Guardar Factura
+      </button>
+    </div>
+  </form>
+</div>

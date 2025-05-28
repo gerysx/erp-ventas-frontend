@@ -1,0 +1,52 @@
+.factura-container {
+  padding: 40px 20px;
+  max-width: 900px;
+  margin: auto;
+  color: #212529;
+  font-family: 'Raleway', sans-serif;
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 500;
+  margin-top: 32px;
+  margin-bottom: 16px;
+  color: #2c3e50;
+}
+
+mat-card {
+  background-color: #fdfdfd;
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+}
+
+mat-card:hover {
+  transform: scale(1.01);
+}
+
+.producto-card {
+  border-left: 4px solid #0d6efd;
+}
+
+button {
+  margin-top: 12px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease-in-out;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+}

@@ -1,0 +1,91 @@
+<div class="container mt-4">
+  <mat-card>
+    <mat-card-title>{{
+      editando ? "Editar Usuario" : "Crear Usuario"
+    }}</mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="guardar()">
+        <mat-form-field appearance="fill" class="w-100 mb-3">
+          <mat-label>Nombre</mat-label>
+          <input matInput formControlName="nombre" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="w-100 mb-3">
+          <mat-label>Correo</mat-label>
+          <input matInput formControlName="correo" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="w-100 mb-3">
+          <mat-label>Contraseña</mat-label>
+          <input matInput type="password" formControlName="password" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="w-100 mb-3">
+          <mat-label>Rol</mat-label>
+          <mat-select formControlName="rol">
+            <mat-option *ngFor="let r of roles" [value]="r">{{ r }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="form.invalid"
+        >
+          {{ editando ? "Actualizar" : "Crear" }}
+        </button>
+        <button mat-button type="button" *ngIf="editando" (click)="cancelar()">
+          Cancelar
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="mt-4">
+    <mat-card-title>Usuarios registrados</mat-card-title>
+    <mat-card-content>
+      <table mat-table [dataSource]="usuarios" class="w-100 mat-elevation-z2">
+        <ng-container matColumnDef="nombre">
+          <th mat-header-cell *matHeaderCellDef>Nombre</th>
+          <td mat-cell *matCellDef="let u">{{ u.nombre }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="correo">
+          <th mat-header-cell *matHeaderCellDef>Correo</th>
+          <td mat-cell *matCellDef="let u">{{ u.correo }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="rol">
+          <th mat-header-cell *matHeaderCellDef>Rol</th>
+          <td mat-cell *matCellDef="let u">{{ u.rol }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let u">
+            <div>
+              <button
+                class="btn btn-sm btn-outline-primary me-2"
+                (click)="editar(u)"
+                title="Editar"
+              >
+                <i class="bi bi-pen"></i>
+              </button>
+              <button
+                class="btn btn-sm btn-outline-danger"
+                (click)="eliminar(u.id)"
+                title="Eliminar"
+              >
+                <i class="bi bi-x-circle"></i>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</div>
