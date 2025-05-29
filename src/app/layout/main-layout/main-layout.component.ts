@@ -19,16 +19,14 @@ export class MainLayoutComponent implements OnInit {
   constructor(private auth: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    // Actualiza la información del usuario al navegar entre rutas
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => {
-      const usuario = this.auth.obtenerUsuario();
-      this.usuarioCorreo = usuario?.correo ?? '';
-      this.esAdmin = usuario?.rol === 'ADMIN';
-      console.log('[Navbar] esAdmin:', this.esAdmin);
-    });
-  }
+  const usuario = this.auth.obtenerUsuario();
+  this.usuarioCorreo = usuario?.correo ?? '';
+  console.log('[DEBUG] usuario.rol:', usuario?.rol);
+
+  this.esAdmin = usuario?.rol?.toUpperCase() === 'ADMIN';
+  console.log('[DEBUG] esAdmin:', this.esAdmin);
+}
+
 
   logout() {
     this.auth.logout();
