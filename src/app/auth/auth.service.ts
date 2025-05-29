@@ -1,4 +1,4 @@
-// src/app/core/auth/auth.service.ts
+
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -13,9 +13,18 @@ interface JwtPayload {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private usuario!: JwtPayload | null;
+  private usuario: JwtPayload | null = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    const token = this.obtenerToken();
+    if (token) {
+      try {
+        this.usuario = jwtDecode<JwtPayload>(token);
+      } catch {
+        this.usuario = null;
+      }
+    }
+  }
 
   login(datos: {
     correo: string;
@@ -24,9 +33,9 @@ export class AuthService {
     console.log('URL usada para login:', environment.apiUrl + '/api/auth/login');
 
     return this.http.post<{ token: string }>(
-  `${environment.apiUrl}/api/auth/login`,
-  datos
-);
+      `${environment.apiUrl}/api/auth/login`,
+      datos
+    );
   }
 
   guardarToken(token: string) {
@@ -41,6 +50,10 @@ export class AuthService {
 
   obtenerToken(): string | null {
     return localStorage.getItem('token');
+  }
+
+  get token(): string | null {
+    return this.obtenerToken();
   }
 
   obtenerRol(): string | null {
