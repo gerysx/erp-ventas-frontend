@@ -1,14 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterModule, RouterOutlet } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
 import { CommonModule } from '@angular/common';
+import { RouterModule, RouterOutlet } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-main-layout',
   standalone: true,
   imports: [CommonModule, RouterOutlet, RouterModule],
   templateUrl: './main-layout.component.html',
-  styleUrls: ['./main-layout.component.scss'],
+  styleUrls: ['./main-layout.component.scss']
 })
 export class MainLayoutComponent implements OnInit {
   usuarioCorreo = '';
@@ -17,9 +19,15 @@ export class MainLayoutComponent implements OnInit {
   constructor(private auth: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    const usuario = this.auth.obtenerUsuario();
-    this.usuarioCorreo = usuario?.correo ?? '';
-    this.esAdmin = usuario?.rol === 'ADMIN';
+    // Actualiza la información del usuario al navegar entre rutas
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      const usuario = this.auth.obtenerUsuario();
+      this.usuarioCorreo = usuario?.correo ?? '';
+      this.esAdmin = usuario?.rol === 'ADMIN';
+      console.log('[Navbar] esAdmin:', this.esAdmin);
+    });
   }
 
   logout() {
