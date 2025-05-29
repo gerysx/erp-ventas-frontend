@@ -1,10 +1,11 @@
 <h2 mat-dialog-title>Factura Nº {{ data.factura.id }}</h2>
-<mat-dialog-content>
-  <p><strong>Fecha:</strong> {{ data.factura.fecha | date }}</p>
-<p><strong>Cliente:</strong> {{ data.factura.cliente?.nombre || 'No disponible' }}</p>
-<p><strong>Empleado:</strong> {{ data.factura.empleado?.nombre || 'No disponible' }}</p>
 
-  <table class="table table-bordered mt-3">
+<mat-dialog-content>
+  <p><strong>Fecha:</strong> {{ data.factura.fecha | date: 'short' }}</p>
+  <p><strong>Cliente:</strong> {{ data.factura.cliente?.nombre || 'No disponible' }}</p>
+  <p><strong>Empleado:</strong> {{ data.factura.empleado?.nombre || 'No disponible' }}</p>
+
+  <table class="table table-bordered mt-3" *ngIf="data.factura.detalles?.length > 0">
     <thead>
       <tr>
         <th>Producto</th>
@@ -15,7 +16,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let d of data.factura.detalles">
-        <td>{{ d.producto.nombre }}</td>
+        <td>{{ d.producto?.nombre || 'Desconocido' }}</td>
         <td>{{ d.cantidad }}</td>
         <td>{{ d.precioUnitario | currency }}</td>
         <td>{{ d.cantidad * d.precioUnitario | currency }}</td>
@@ -23,10 +24,13 @@
     </tbody>
   </table>
 
-  <h4 class="mt-3 text-end">Total: {{ getTotal(data.factura.detalles) | currency }}</h4>
+  <p *ngIf="!data.factura.detalles?.length">No hay detalles disponibles para esta factura.</p>
+
+  <h4 class="mt-3 text-end">
+    Total: {{ getTotal(data.factura.detalles) | currency }}
+  </h4>
 </mat-dialog-content>
 
-
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Cerrar</button>
+  <button mat-button (click)="cerrar()">Cerrar</button>
 </mat-dialog-actions>

@@ -1,27 +1,28 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
-import { MatListModule } from '@angular/material/list';
-import { AuthService } from '../../auth/auth.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTableModule } from '@angular/material/table';
+import { AuthService } from '../../auth/auth.service';
+import { EmpleadoService } from './empleado.service'; // Asegúrate que la ruta sea correcta
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-empleados',
   standalone: true,
   imports: [
-  CommonModule,
-  ReactiveFormsModule,
-  MatCardModule,
-  MatFormFieldModule,
-  MatInputModule,
-  MatButtonModule,
-  MatTableModule
-],
+    CommonModule,
+    ReactiveFormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatTableModule
+  ],
   templateUrl: './empleados.component.html',
   styleUrls: ['./empleados.component.scss']
 })
@@ -34,8 +35,9 @@ export class EmpleadosComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient,
-    private auth: AuthService
+    private auth: AuthService,
+    private empleadoService: EmpleadoService,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -51,7 +53,7 @@ export class EmpleadosComponent implements OnInit {
   }
 
   cargarEmpleados() {
-    this.http.get<any[]>('http://localhost:3000/api/empleados').subscribe(data => {
+    this.empleadoService.listar().subscribe(data => {
       this.empleados = data;
     });
   }
@@ -60,9 +62,10 @@ export class EmpleadosComponent implements OnInit {
     if (this.form.invalid) return;
 
     const datos = this.form.value;
+    const url = `${environment.apiUrl}/api/empleados`;
 
     if (this.modoEdicion && this.empleadoEditandoId !== null) {
-      this.http.put(`http://localhost:3000/api/empleados/${this.empleadoEditandoId}`, datos).subscribe({
+      this.http.put(`${url}/${this.empleadoEditandoId}`, datos).subscribe({
         next: () => {
           this.resetFormulario();
           this.cargarEmpleados();
@@ -70,7 +73,7 @@ export class EmpleadosComponent implements OnInit {
         error: () => alert('Error al actualizar empleado')
       });
     } else {
-      this.http.post('http://localhost:3000/api/empleados', datos).subscribe({
+      this.http.post(url, datos).subscribe({
         next: () => {
           this.resetFormulario();
           this.cargarEmpleados();
@@ -87,9 +90,10 @@ export class EmpleadosComponent implements OnInit {
   }
 
   eliminar(id: number) {
+    const url = `${environment.apiUrl}/api/empleados/${id}`;
     if (!confirm('¿Eliminar empleado?')) return;
 
-    this.http.delete(`http://localhost:3000/api/empleados/${id}`).subscribe({
+    this.http.delete(url).subscribe({
       next: () => this.cargarEmpleados(),
       error: () => alert('Error al eliminar empleado')
     });

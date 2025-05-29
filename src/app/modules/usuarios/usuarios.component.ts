@@ -6,11 +6,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
-import { HttpClient } from '@angular/common/http';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
-import { ConfirmDialogComponent } from './confirm-dialog.component';
 import { RouterModule } from '@angular/router';
+import { ConfirmDialogComponent } from './confirm-dialog.component';
+import { UsuarioService, Usuario } from './usuarios.service';// Nuevo servicio
 
 @Component({
   selector: 'app-usuarios',
@@ -31,16 +31,16 @@ import { RouterModule } from '@angular/router';
 })
 export class UsuariosComponent implements OnInit {
   form: FormGroup;
-  usuarios: any[] = [];
+  usuarios: Usuario[] = [];
   roles = ['EMPLEADO', 'ADMIN'];
-  editando: boolean = false;
+  editando = false;
   usuarioEditandoId: number | null = null;
 
   displayedColumns = ['nombre', 'correo', 'rol', 'acciones'];
 
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient,
+    private usuarioService: UsuarioService,
     private dialog: MatDialog
   ) {
     this.form = this.fb.group({
@@ -56,7 +56,7 @@ export class UsuariosComponent implements OnInit {
   }
 
   cargarUsuarios() {
-    this.http.get<any[]>('/api/usuarios').subscribe((data) => {
+    this.usuarioService.listar().subscribe((data) => {
       this.usuarios = data;
     });
   }
@@ -67,11 +67,11 @@ export class UsuariosComponent implements OnInit {
     const data = this.form.value;
     if (!this.editando && !data.password) return;
 
-    const request = this.editando
-      ? this.http.put(`/api/usuarios/${this.usuarioEditandoId}`, data)
-      : this.http.post('/api/usuarios', data);
+    const req = this.editando
+      ? this.usuarioService.actualizar(this.usuarioEditandoId!, data)
+      : this.usuarioService.crear(data);
 
-    request.subscribe({
+    req.subscribe({
       next: () => {
         this.cancelar();
         this.cargarUsuarios();
@@ -80,9 +80,9 @@ export class UsuariosComponent implements OnInit {
     });
   }
 
-  editar(usuario: any) {
+  editar(usuario: Usuario) {
     this.editando = true;
-    this.usuarioEditandoId = usuario.id;
+    this.usuarioEditandoId = usuario.id ?? null;
     this.form.patchValue({
       nombre: usuario.nombre,
       correo: usuario.correo,
@@ -107,7 +107,7 @@ export class UsuariosComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((confirmado) => {
       if (confirmado) {
-        this.http.delete(`/api/usuarios/${id}`).subscribe({
+        this.usuarioService.eliminar(id).subscribe({
           next: () => this.cargarUsuarios(),
           error: (err) =>
             alert(err.error?.mensaje || 'Error al eliminar usuario'),

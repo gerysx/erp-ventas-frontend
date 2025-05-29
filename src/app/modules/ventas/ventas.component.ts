@@ -6,8 +6,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { ProductoService } from '../productos/producto.service';
-import { FacturaService } from '../../facturas/factura.service';
+import { ProductoService, Producto } from '../productos/producto.service';
+import { FacturaService, DetalleFactura } from '../../facturas/factura.service';
 import { VentaDetalleDialogComponent } from './venta-detalle-dialog.component';
 
 @Component({
@@ -21,15 +21,14 @@ import { VentaDetalleDialogComponent } from './venta-detalle-dialog.component';
     MatTableModule,
     MatCardModule,
     MatDialogModule,
-
   ],
   templateUrl: './ventas.component.html',
   styleUrls: ['./ventas.component.scss']
 })
 export class VentasComponent implements OnInit {
-  productos: any[] = [];
+  productos: Producto[] = [];
   productoSeleccionado: number | null = null;
-  ventasProducto: any[] = [];
+  ventasProducto: DetalleFactura[] = [];
 
   displayedColumns: string[] = [
     'nombre',
@@ -49,7 +48,9 @@ export class VentasComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.productoService.listar().subscribe(p => this.productos = p);
+    this.productoService.listar().subscribe(productos => {
+      this.productos = productos;
+    });
   }
 
   buscarVentasPorProducto() {

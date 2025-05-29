@@ -1,52 +1,55 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { MatListModule } from '@angular/material/list';
-import { AuthService } from '../../auth/auth.service';
 import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { AuthService } from '../../auth/auth.service';
+import { ProveedorService, Proveedor } from './proveedor.service'; // Nuevo servicio
 
 @Component({
   selector: 'app-proveedores',
   standalone: true,
   imports: [
-  CommonModule,
-  ReactiveFormsModule,
-  MatCardModule,
-  MatFormFieldModule,
-  MatInputModule,
-  MatButtonModule,
-  MatTableModule
-],
+    CommonModule,
+    ReactiveFormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatTableModule
+  ],
   templateUrl: './proveedores.component.html',
   styleUrls: ['./proveedores.component.scss']
 })
 export class ProveedoresComponent implements OnInit {
   form!: FormGroup;
-  proveedores: any[] = [];
+  proveedores: Proveedor[] = [];
   esAdmin = false;
   modoEdicion = false;
   proveedorEditandoId: number | null = null;
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private auth: AuthService) {}
+  constructor(
+    private fb: FormBuilder,
+    private auth: AuthService,
+    private proveedorService: ProveedorService
+  ) {}
 
   ngOnInit(): void {
-    this.esAdmin = this.auth.obtenerRol() === 'ADMIN';
+    this.esAdmin = this.auth.esAdmin();
 
     this.form = this.fb.group({
       nombre: ['', Validators.required],
-      contacto: ['']  // <--- Campo opcional
+      contacto: ['']
     });
 
     this.cargarProveedores();
   }
 
   cargarProveedores() {
-    this.http.get<any[]>('http://localhost:3000/api/proveedores').subscribe(data => {
+    this.proveedorService.listar().subscribe(data => {
       this.proveedores = data;
     });
   }
@@ -57,7 +60,7 @@ export class ProveedoresComponent implements OnInit {
     const proveedor = this.form.value;
 
     if (this.modoEdicion && this.proveedorEditandoId !== null) {
-      this.http.put(`http://localhost:3000/api/proveedores/${this.proveedorEditandoId}`, proveedor).subscribe({
+      this.proveedorService.actualizar(this.proveedorEditandoId, proveedor).subscribe({
         next: () => {
           this.resetFormulario();
           this.cargarProveedores();
@@ -65,7 +68,7 @@ export class ProveedoresComponent implements OnInit {
         error: () => alert('Error al actualizar proveedor')
       });
     } else {
-      this.http.post('http://localhost:3000/api/proveedores', proveedor).subscribe({
+      this.proveedorService.crear(proveedor).subscribe({
         next: () => {
           this.resetFormulario();
           this.cargarProveedores();
@@ -75,16 +78,16 @@ export class ProveedoresComponent implements OnInit {
     }
   }
 
-  editar(proveedor: any) {
+  editar(proveedor: Proveedor) {
     this.form.patchValue(proveedor);
     this.modoEdicion = true;
-    this.proveedorEditandoId = proveedor.id;
+    this.proveedorEditandoId = proveedor.id ?? null;
   }
 
   eliminar(id: number) {
     if (!confirm('¿Eliminar proveedor?')) return;
 
-    this.http.delete(`http://localhost:3000/api/proveedores/${id}`).subscribe({
+    this.proveedorService.eliminar(id).subscribe({
       next: () => this.cargarProveedores(),
       error: () => alert('Error al eliminar proveedor')
     });
