@@ -1,32 +1,57 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary px-4 shadow-sm transition">
-  <div class="container-fluid d-flex justify-content-between align-items-center w-100">
+<nav
+  class="navbar navbar-expand-lg navbar-dark bg-primary px-4 shadow-sm transition"
+>
+  <div
+    class="container-fluid d-flex justify-content-between align-items-center w-100"
+  >
     <!-- Logo -->
-    <a class="navbar-brand fs-3 fw-bold font-logo d-flex align-items-center gap-2" routerLink="/">
+    <a
+      class="navbar-brand fs-3 fw-bold font-logo d-flex align-items-center gap-2"
+      routerLink="/"
+    >
       <img src="assets/images/logo.png" alt="Logo GAG" class="logo-navbar" />
     </a>
 
     <!-- Mobile toggle -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNav">
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#menuNav"
+    >
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <!-- Menú -->
-    <div class="collapse navbar-collapse justify-content-center" id="menuNav">
+    <div class="navbar-collapse justify-content-center" id="menuNav">
       <ul class="navbar-nav mb-2 mb-lg-0 gap-3">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/productos" routerLinkActive="active">Productos</a>
+          <a class="nav-link" routerLink="/productos" routerLinkActive="active"
+            >Productos</a
+          >
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/clientes" routerLinkActive="active">Clientes</a>
+          <a class="nav-link" routerLink="/clientes" routerLinkActive="active"
+            >Clientes</a
+          >
         </li>
         <li class="nav-item" *ngIf="esAdmin">
-          <a class="nav-link" routerLink="/empleados" routerLinkActive="active">Empleados</a>
+          <a class="nav-link" routerLink="/empleados" routerLinkActive="active"
+            >Empleados</a
+          >
         </li>
         <li class="nav-item" *ngIf="esAdmin">
-          <a class="nav-link" routerLink="/proveedores" routerLinkActive="active">Proveedores</a>
+          <a
+            class="nav-link"
+            routerLink="/proveedores"
+            routerLinkActive="active"
+            >Proveedores</a
+          >
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/ventas" routerLinkActive="active">Ventas</a>
+          <a class="nav-link" routerLink="/ventas" routerLinkActive="active"
+            >Ventas</a
+          >
         </li>
         <li class="nav-item dropdown" *ngIf="esAdmin">
           <button
@@ -38,12 +63,20 @@
             Facturas
           </button>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" routerLink="/facturas/nueva">Crear Factura</a></li>
-            <li><a class="dropdown-item" routerLink="/facturas">Ver Facturas</a></li>
+            <li>
+              <a class="dropdown-item" routerLink="/facturas/nueva"
+                >Crear Factura</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="/facturas">Ver Facturas</a>
+            </li>
           </ul>
         </li>
         <li class="nav-item" *ngIf="esAdmin">
-          <a class="nav-link" routerLink="/usuarios" routerLinkActive="active">Usuarios</a>
+          <a class="nav-link" routerLink="/usuarios" routerLinkActive="active"
+            >Usuarios</a
+          >
         </li>
       </ul>
     </div>
@@ -51,7 +84,10 @@
     <!-- Usuario y logout -->
     <div class="d-flex align-items-center gap-3">
       <span class="text-white d-none d-md-inline">{{ usuarioCorreo }}</span>
-      <button class="btn btn-outline-light btn-sm d-flex align-items-center gap-2" (click)="logout()">
+      <button
+        class="btn btn-outline-light btn-sm d-flex align-items-center gap-2"
+        (click)="logout()"
+      >
         <i class="bi bi-box-arrow-right"></i>
         <span class="d-none d-sm-inline">Cerrar sesión</span>
       </button>
