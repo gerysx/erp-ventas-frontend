@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
 import { CommonModule } from '@angular/common';
@@ -16,17 +16,32 @@ export class MainLayoutComponent implements OnInit {
   usuarioCorreo = '';
   esAdmin = false;
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(
+    private auth: AuthService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-  const usuario = this.auth.obtenerUsuario();
-  this.usuarioCorreo = usuario?.correo ?? '';
-  console.log('[DEBUG] usuario.rol:', usuario?.rol);
+    // Asignar en primera carga
+    this.actualizarUsuario();
 
-  this.esAdmin = usuario?.rol?.toUpperCase() === 'ADMIN';
-  console.log('[DEBUG] esAdmin:', this.esAdmin);
-}
+    // Actualizar también después de cada navegación
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.actualizarUsuario();
+    });
+  }
 
+  actualizarUsuario() {
+    const usuario = this.auth.obtenerUsuario();
+    this.usuarioCorreo = usuario?.correo ?? '';
+    this.esAdmin = usuario?.rol?.toUpperCase() === 'ADMIN';
+
+    console.log('[Navbar] Rol:', usuario?.rol, '| esAdmin:', this.esAdmin);
+    this.cdr.detectChanges(); // Forzar actualización visual
+  }
 
   logout() {
     this.auth.logout();

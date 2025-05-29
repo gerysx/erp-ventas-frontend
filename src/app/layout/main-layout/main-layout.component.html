@@ -13,32 +13,21 @@
     <!-- Menú -->
     <div class="collapse navbar-collapse justify-content-center" id="menuNav">
       <ul class="navbar-nav mb-2 mb-lg-0 gap-3">
-        <!-- Productos -->
         <li class="nav-item">
           <a class="nav-link" routerLink="/productos" routerLinkActive="active">Productos</a>
         </li>
-
-        <!-- Clientes -->
         <li class="nav-item">
           <a class="nav-link" routerLink="/clientes" routerLinkActive="active">Clientes</a>
         </li>
-
-        <!-- Empleados -->
         <li class="nav-item" *ngIf="esAdmin">
           <a class="nav-link" routerLink="/empleados" routerLinkActive="active">Empleados</a>
         </li>
-
-        <!-- Proveedores -->
         <li class="nav-item" *ngIf="esAdmin">
           <a class="nav-link" routerLink="/proveedores" routerLinkActive="active">Proveedores</a>
         </li>
-
-        <!-- Ventas -->
         <li class="nav-item">
           <a class="nav-link" routerLink="/ventas" routerLinkActive="active">Ventas</a>
         </li>
-
-        <!-- Facturas -->
         <li class="nav-item dropdown" *ngIf="esAdmin">
           <button
             class="nav-link dropdown-toggle btn btn-link text-white"
@@ -53,8 +42,6 @@
             <li><a class="dropdown-item" routerLink="/facturas">Ver Facturas</a></li>
           </ul>
         </li>
-
-        <!-- Usuarios -->
         <li class="nav-item" *ngIf="esAdmin">
           <a class="nav-link" routerLink="/usuarios" routerLinkActive="active">Usuarios</a>
         </li>
