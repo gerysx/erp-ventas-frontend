@@ -5,8 +5,27 @@
 
 
 body {
+  @apply bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500;
   font-family: 'Raleway', sans-serif;
   font-weight: 400;
   line-height: 1.6;
-  color: #212529; // color base
+  color: #212529;
 }
+
+.animate-gradient {
+  background-size: 300% 300%;
+  animation: gradient 8s ease infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+

@@ -1,59 +1,71 @@
-<section class="bg-gray-50 dark:bg-gray-900">
-  <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-    <div class="w-full bg-white rounded-lg shadow dark:border sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-      <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
-        <img src="assets/images/logo.png" alt="Logo" class="mx-auto mb-4 h-12 w-auto" />
-        <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white text-center">
+<section class="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 animate-gradient">
+  <div class="flex flex-col items-center justify-center px-6 py-8 w-full sm:max-w-md">
+    <div class="w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700">
+      <div class="p-8 space-y-6">
+        <!-- Logo -->
+        <img src="assets/images/logo.png" alt="Logo" class="mx-auto mb-4 h-14 w-auto" />
+
+        <!-- Título -->
+        <h1 class="text-2xl font-extrabold text-center text-gray-900 dark:text-white">
           Crear cuenta
         </h1>
 
-        <form [formGroup]="form" (ngSubmit)="enviar()" class="space-y-4 md:space-y-6">
+        <!-- Formulario -->
+        <form [formGroup]="form" (ngSubmit)="enviar()" class="space-y-5">
+          <!-- Nombre -->
           <div>
-            <label for="nombre" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tu nombre</label>
+            <label for="nombre" class="block mb-2 text-sm font-semibold text-gray-800 dark:text-gray-200">Nombre</label>
             <input
               type="text"
               id="nombre"
               formControlName="nombre"
               placeholder="Juan Pérez"
-              class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              class="bg-white/70 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-3 transition duration-300"
             />
           </div>
 
+          <!-- Correo -->
           <div>
-            <label for="correo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Correo electrónico</label>
+            <label for="correo" class="block mb-2 text-sm font-semibold text-gray-800 dark:text-gray-200">Correo electrónico</label>
             <input
               type="email"
               id="correo"
               formControlName="correo"
               placeholder="ejemplo@correo.com"
-              class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              class="bg-white/70 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-3 transition duration-300"
             />
           </div>
 
+          <!-- Contraseña -->
           <div>
-            <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contraseña</label>
+            <label for="password" class="block mb-2 text-sm font-semibold text-gray-800 dark:text-gray-200">Contraseña</label>
             <input
               type="password"
               id="password"
               formControlName="password"
               placeholder="••••••••"
-              class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              class="bg-white/70 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-3 transition duration-300"
             />
           </div>
 
+          <!-- Botón -->
           <button
             type="submit"
             [disabled]="form.invalid"
-            class="w-full text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+            class="w-full text-white bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-semibold rounded-lg text-base px-5 py-3 text-center transition-transform transform hover:scale-[1.02] disabled:opacity-50"
           >
             Crear cuenta
           </button>
 
-          <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+          <!-- Link a login -->
+          <p class="text-sm font-light text-gray-600 dark:text-gray-300 text-center">
             ¿Ya tienes una cuenta?
-            <a routerLink="/login" class="font-medium text-green-600 hover:underline">Inicia sesión</a>
+            <a routerLink="/login" class="font-semibold text-green-600 hover:underline dark:text-green-400">
+              Inicia sesión
+            </a>
           </p>
 
+          <!-- Mensaje de error -->
           <p *ngIf="error" class="text-sm text-red-600 mt-2 text-center">
             {{ error }}
           </p>
