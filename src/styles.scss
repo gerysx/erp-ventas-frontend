@@ -5,12 +5,14 @@
 
 
 body {
-  @apply bg-gradient-to-r from-indigo-400 to-cyan-400 animate-gradient;
+  @apply bg-gradient-to-r from-blue-200 to-cyan-200 animate-gradient;
   font-family: 'Raleway', sans-serif;
   font-weight: 400;
   line-height: 1.6;
   color: #212529;
 }
+
+
 
 .animate-gradient {
   background-size: 300% 300%;
