@@ -1,21 +1,30 @@
 <div class="factura-container" *ngIf="factura">
-  <h1>Detalle Factura Nº {{ factura.id }}</h1>
+  <h1 class="text-2xl font-bold mb-4">Factura Nº {{ factura.id }}</h1>
 
-  <mat-card>
-    <p><strong>Fecha:</strong> {{ factura.fecha | date }}</p>
+  <mat-card class="p-4 mb-4">
+    <p><strong>Fecha:</strong> {{ factura.fecha | date:'shortDate' }}</p>
     <p><strong>Cliente:</strong> {{ factura.cliente?.nombre }}</p>
     <p><strong>Empleado:</strong> {{ factura.empleado?.nombre }}</p>
   </mat-card>
 
-  <h2>Productos</h2>
-  <mat-card *ngFor="let d of factura.detalles" class="mb-2">
+  <h2 class="text-xl font-semibold mb-2">Productos</h2>
+
+  <mat-card *ngFor="let d of factura.detalles" class="p-4 mb-2 shadow-sm">
     <p><strong>Producto:</strong> {{ d.producto?.nombre }}</p>
     <p><strong>Cantidad:</strong> {{ d.cantidad }}</p>
-    <p><strong>Precio Unitario:</strong> {{ d.precioUnitario }}€</p>
-    <p><strong>Subtotal:</strong> {{ d.cantidad * d.precioUnitario*0.50 }}€</p>
+    <p><strong>Precio Unitario:</strong> {{ d.precioUnitario | currency:'EUR' }}</p>
+    <p><strong>Subtotal:</strong> {{ (d.cantidad * d.precioUnitario) | currency:'EUR' }}</p>
   </mat-card>
 
-  <div class="mt-3">
+  <!-- Total General -->
+<div class="mt-4 text-right">
+  <h3 class="text-lg font-bold">
+    Total: {{ getTotal() | currency:'EUR' }}
+  </h3>
+</div>
+
+
+  <div class="mt-3 text-right">
     <button mat-raised-button color="primary" (click)="descargarPDF()">
       Descargar PDF
     </button>

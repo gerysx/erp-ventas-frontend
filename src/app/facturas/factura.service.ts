@@ -3,10 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
+// ✅ Interfaces tipadas
 export interface Producto {
   id: number;
   nombre: string;
-  precio: string;
+  precio: string; // viene como string desde backend
   stock: number;
   descripcion: string | null;
   proveedorId: number;
@@ -17,12 +18,21 @@ export interface Producto {
 export interface DetalleFactura {
   id: number;
   cantidad: number;
-  precioUnitario: string;
+  precioUnitario: string; // también viene como string
   facturaId: number;
   productoId: number;
   createdat: string;
   updatedat: string;
   producto: Producto;
+}
+
+export interface Factura {
+  id: number;
+  fecha: string;
+  cliente: { id: number; nombre: string } | null;
+  empleado: { id: number; nombre: string } | null;
+  detalles?: DetalleFactura[];
+  total?: number; // opcional porque lo calculamos a veces en el backend
 }
 
 export interface VentasPorProductoResponse {
@@ -38,24 +48,29 @@ export class FacturaService {
 
   constructor(private http: HttpClient) {}
 
-  listar(): Observable<any[]> {
-    return this.http.get<any[]>(this.baseUrl);
+  //  Lista todas las facturas
+  listar(): Observable<Factura[]> {
+    return this.http.get<Factura[]>(this.baseUrl);
   }
 
-  obtener(id: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/${id}`);
+  //  Obtiene factura con detalles
+  obtener(id: number): Observable<Factura> {
+    return this.http.get<Factura>(`${this.baseUrl}/${id}`);
   }
 
-  crear(data: any): Observable<any> {
-    return this.http.post(this.baseUrl, data);
+  //  Crear factura
+  crear(data: any): Observable<{ mensaje: string; id: number }> {
+    return this.http.post<{ mensaje: string; id: number }>(this.baseUrl, data);
   }
 
+  //  Descargar PDF
   descargarPDF(id: number): Observable<Blob> {
     return this.http.get(`${this.baseUrl}/${id}/pdf`, {
       responseType: 'blob'
     });
   }
 
+  //  Listar ventas filtradas por cliente o empleado
   listarVentas(clienteId: string = '', empleadoId: string = ''): Observable<any[]> {
     const params = [];
     if (clienteId) params.push(`clienteId=${clienteId}`);
@@ -64,6 +79,7 @@ export class FacturaService {
     return this.http.get<any[]>(`${this.baseUrl}/ventas${queryString}`);
   }
 
+  //  Ventas por producto (detalle + totales)
   ventasPorProducto(productoId: number): Observable<VentasPorProductoResponse> {
     return this.http.get<VentasPorProductoResponse>(
       `${this.baseUrl}/ventas/producto/${productoId}`

@@ -35,4 +35,13 @@ export class FacturaDetalleComponent implements OnInit {
       URL.revokeObjectURL(url);
     });
   }
+
+  getTotal(): number {
+  if (!this.factura || !this.factura.detalles) return 0;
+  return this.factura.detalles.reduce(
+    (sum: number, d: any) => sum + (d.cantidad * parseFloat(d.precioUnitario)),
+    0
+  );
+}
+
 }
