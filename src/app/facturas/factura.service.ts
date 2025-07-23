@@ -3,10 +3,33 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
+export interface Producto {
+  id: number;
+  nombre: string;
+  precio: string;
+  stock: number;
+  descripcion: string | null;
+  proveedorId: number;
+  createdat: string;
+  updatedat: string;
+}
+
 export interface DetalleFactura {
-  producto: any;
+  id: number;
   cantidad: number;
-  precioUnitario: number;
+  precioUnitario: string;
+  facturaId: number;
+  productoId: number;
+  createdat: string;
+  updatedat: string;
+  producto: Producto;
+}
+
+export interface VentasPorProductoResponse {
+  producto: Producto | null;
+  totalCantidad: number;
+  totalVentas: number;
+  detalles: DetalleFactura[];
 }
 
 @Injectable({ providedIn: 'root' })
@@ -41,7 +64,9 @@ export class FacturaService {
     return this.http.get<any[]>(`${this.baseUrl}/ventas${queryString}`);
   }
 
-  ventasPorProducto(productoId: number): Observable<DetalleFactura[]> {
-    return this.http.get<DetalleFactura[]>(`${this.baseUrl}/ventas/producto/${productoId}`);
+  ventasPorProducto(productoId: number): Observable<VentasPorProductoResponse> {
+    return this.http.get<VentasPorProductoResponse>(
+      `${this.baseUrl}/ventas/producto/${productoId}`
+    );
   }
 }

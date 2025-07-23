@@ -7,7 +7,10 @@ import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ProductoService, Producto } from '../productos/producto.service';
-import { FacturaService, DetalleFactura } from '../../facturas/factura.service';
+import {
+  FacturaService,
+  VentasPorProductoResponse
+} from '../../facturas/factura.service';
 import { VentaDetalleDialogComponent } from './venta-detalle-dialog.component';
 
 @Component({
@@ -20,7 +23,7 @@ import { VentaDetalleDialogComponent } from './venta-detalle-dialog.component';
     MatSelectModule,
     MatTableModule,
     MatCardModule,
-    MatDialogModule,
+    MatDialogModule
   ],
   templateUrl: './ventas.component.html',
   styleUrls: ['./ventas.component.scss']
@@ -28,18 +31,9 @@ import { VentaDetalleDialogComponent } from './venta-detalle-dialog.component';
 export class VentasComponent implements OnInit {
   productos: Producto[] = [];
   productoSeleccionado: number | null = null;
-  ventasProducto: DetalleFactura[] = [];
+  ventasProducto: VentasPorProductoResponse | null = null;
 
-  displayedColumns: string[] = [
-    'nombre',
-    'precio',
-    'stock',
-    'descripcion',
-    'proveedorId',
-    'createdAt',
-    'updatedAt',
-    'acciones'
-  ];
+  displayedColumns: string[] = ['cantidad', 'precioUnitario', 'subtotal'];
 
   constructor(
     private productoService: ProductoService,
@@ -48,42 +42,30 @@ export class VentasComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.productoService.listar().subscribe(productos => {
+    this.productoService.listar().subscribe((productos) => {
       this.productos = productos;
     });
   }
 
   buscarVentasPorProducto() {
     if (!this.productoSeleccionado) {
-      this.ventasProducto = [];
+      this.ventasProducto = null;
       return;
     }
 
-    this.facturaService.ventasPorProducto(this.productoSeleccionado).subscribe(data => {
-      this.ventasProducto = data;
-    });
-  }
-
-  verDetalle(productoId: number) {
-    this.facturaService.ventasPorProducto(productoId).subscribe((detalles) => {
-      const producto = detalles[0]?.producto || {};
-
-      const facturaMock = {
-        id: productoId,
-        fecha: new Date(),
-        cliente: null,
-        empleado: null,
-        detalles: detalles.map(d => ({
-          producto: d.producto,
-          cantidad: d.cantidad,
-          precioUnitario: d.precioUnitario
-        }))
-      };
-
-      this.dialog.open(VentaDetalleDialogComponent, {
-        width: '600px',
-        data: { factura: facturaMock }
+    this.facturaService
+      .ventasPorProducto(this.productoSeleccionado)
+      .subscribe((data) => {
+        this.ventasProducto = data;
       });
-    });
   }
+
+  verDetalle() {
+  if (!this.ventasProducto) return;
+
+  this.dialog.open(VentaDetalleDialogComponent, {
+    width: '600px',
+    data: { ventas: this.ventasProducto }
+  });
+}
 }
